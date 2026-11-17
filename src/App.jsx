@@ -11,12 +11,12 @@ export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user") || "null"));
   
-  // Auth Form State
+  // Auth Form State (clean empty defaults)
   const [isRegister, setIsRegister] = useState(false);
-  const [authEmail, setAuthEmail] = useState("radhika@seventhraylegaltech.com");
-  const [authPassword, setAuthPassword] = useState("Password123!");
-  const [authName, setAuthName] = useState("Radhika Sharma");
-  const [authCompany, setAuthCompany] = useState("Seventh Ray LegalTech Solutions");
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [authName, setAuthName] = useState("");
+  const [authCompany, setAuthCompany] = useState("");
   
   // Dashboard State
   const [contracts, setContracts] = useState([]);
@@ -267,23 +267,23 @@ export default function App() {
                 <>
                   <div className="form-group">
                     <label>Full Name</label>
-                    <input className="form-input" required value={authName} onChange={(e) => setAuthName(e.target.value)} />
+                    <input className="form-input" placeholder="Vedant Kayandekar" required value={authName} onChange={(e) => setAuthName(e.target.value)} />
                   </div>
                   <div className="form-group">
                     <label>Company / Law Firm Name</label>
-                    <input className="form-input" required value={authCompany} onChange={(e) => setAuthCompany(e.target.value)} />
+                    <input className="form-input" placeholder="Seventh Ray LegalTech Solutions" required value={authCompany} onChange={(e) => setAuthCompany(e.target.value)} />
                   </div>
                 </>
               )}
 
               <div className="form-group">
                 <label>Email Address</label>
-                <input className="form-input" type="email" required value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} />
+                <input className="form-input" type="email" placeholder="vedantassociates2004@gmail.com" required value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} />
               </div>
 
               <div className="form-group">
                 <label>Password</label>
-                <input className="form-input" type="password" required value={authPassword} onChange={(e) => setAuthPassword(e.target.value)} />
+                <input className="form-input" type="password" placeholder="••••••••" required value={authPassword} onChange={(e) => setAuthPassword(e.target.value)} />
               </div>
             </div>
 
