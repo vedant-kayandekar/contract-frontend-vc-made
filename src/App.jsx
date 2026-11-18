@@ -34,6 +34,10 @@ export default function App() {
   const [uploadStart, setUploadStart] = useState("");
   const [uploadEnd, setUploadEnd] = useState("");
   const [uploadFile, setUploadFile] = useState(null);
+  //  new added field
+  const [uploadSignatory, setUploadSignatory] = useState("");
+  //  new added field
+  const [uploadRiskLevel, setUploadRiskLevel] = useState("LOW");
 
   // Contract Details & AI Chat Drawer
   const [selectedContract, setSelectedContract] = useState(null);
@@ -122,6 +126,10 @@ export default function App() {
     if (uploadValue) formData.append("value", uploadValue);
     if (uploadStart) formData.append("startDate", uploadStart);
     if (uploadEnd) formData.append("endDate", uploadEnd);
+    //  new added field
+    if (uploadSignatory) formData.append("counterpartySignatory", uploadSignatory);    
+    //  new added field
+    if (uploadRiskLevel) formData.append("riskLevel", uploadRiskLevel);
     formData.append("file", uploadFile);
 
     try {
@@ -145,6 +153,10 @@ export default function App() {
     setUploadValue("");
     setUploadStart("");
     setUploadEnd("");
+    //  new 
+    setUploadSignatory("");
+    //  new 
+    setUploadRiskLevel("LOW");
     setUploadFile(null);
   }
 
@@ -431,6 +443,8 @@ export default function App() {
               <tr>
                 <th>Contract & Counterparty</th>
                 <th>Type</th>
+                {/*  new */}
+                <th>Risk</th>
                 <th>Value</th>
                 <th>Dates</th>
                 <th>Status</th>
@@ -441,7 +455,7 @@ export default function App() {
             <tbody>
               {contracts.length === 0 ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: "center", padding: "3rem", color: "#94a3b8" }}>
+                  <td colSpan="8" style={{ textAlign: "center", padding: "3rem", color: "#94a3b8" }}>
                     No contracts found. Click "Upload Contract" above to add your first agreement.
                   </td>
                 </tr>
@@ -450,9 +464,19 @@ export default function App() {
                   <tr key={c.id}>
                     <td>
                       <div className="contract-title-cell">{c.title}</div>
-                      <div className="contract-client-cell">{c.clientName}</div>
+                      <div className="contract-client-cell">
+                        {c.clientName}
+                        {/* ✅ new added field */}
+                        {c.counterpartySignatory ? ` • Signatory: ${c.counterpartySignatory}` : ""}
+                      </div>
                     </td>
                     <td><span className="badge badge-DRAFT">{c.contractType}</span></td>
+                    {/* ✅ new added field */}
+                    <td>
+                      <span className={`badge badge-risk-${c.riskLevel || "LOW"}`}>
+                        {c.riskLevel || "LOW"}
+                      </span>
+                    </td>
                     <td>{c.value ? `$${Number(c.value).toLocaleString()}` : "—"}</td>
                     <td style={{ fontSize: "0.8rem", color: "#64748b" }}>
                       {c.startDate ? `${c.startDate} to ${c.endDate || "Ongoing"}` : "Not specified"}
@@ -547,6 +571,22 @@ export default function App() {
                   <input className="form-input" required placeholder="e.g. Acme Corporation" value={uploadClient} onChange={(e) => setUploadClient(e.target.value)} />
                 </div>
 
+                {/*  new added */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                  <div className="form-group">
+                    <label>Counterparty Signatory</label>
+                    <input className="form-input" placeholder="e.g. John Smith, CEO" value={uploadSignatory} onChange={(e) => setUploadSignatory(e.target.value)} />
+                  </div>
+                  <div className="form-group">
+                    <label>Risk Level</label>
+                    <select className="form-select" value={uploadRiskLevel} onChange={(e) => setUploadRiskLevel(e.target.value)}>
+                      <option value="LOW">Low Risk</option>
+                      <option value="MEDIUM">Medium Risk</option>
+                      <option value="HIGH">High Risk</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                   <div className="form-group">
                     <label>Contract Type</label>
@@ -611,7 +651,12 @@ export default function App() {
                   <span className={`badge badge-${selectedContract.status}`}>{selectedContract.status}</span>
                 </div>
                 <div style={{ fontSize: "0.8rem", color: "#64748b", marginTop: "0.25rem" }}>
-                  Counterparty: {selectedContract.clientName} | File: {selectedContract.fileName}
+                  Counterparty: {selectedContract.clientName}
+                  {/*new  */}
+                  {selectedContract.counterpartySignatory ? ` (Signatory: ${selectedContract.counterpartySignatory})` : ""}
+                  {/*  new  */}
+                  {" | Risk: "}{selectedContract.riskLevel || "LOW"}
+                  {" | File: "}{selectedContract.fileName}
                 </div>
               </div>
               <button style={{ background: "none", border: "none", cursor: "pointer" }} onClick={() => setSelectedContract(null)}>
